@@ -12,27 +12,30 @@ using System.Text;
 
 Console.InputEncoding = Encoding.UTF8;
 Console.OutputEncoding = Encoding.UTF8;
-var hostName = Dns.GetHostName();
-Console.WriteLine($"Мій хост: {hostName}");
+// var hostName = Dns.GetHostName();
+// Console.WriteLine($"Мій хост: {hostName}");
 //Список усіх IP адрес доступних для даного ПК
-var locahost = await Dns.GetHostEntryAsync(hostName);
+// var locahost = await Dns.GetHostEntryAsync(hostName);
+//
+// int i = 0;
+// foreach (var item in locahost.AddressList)
+// {
+//     Console.WriteLine($"{++i}.{item}");
+// }
+//
+// Console.Write("->_");
+// int numberIP = int.Parse(Console.ReadLine());
+//
+// Console.WriteLine("Вкажіть порт:");
+//
+// int serverPort = int.Parse(Console.ReadLine()); // порт запуску додатка
 
-int i = 0;
-foreach (var item in locahost.AddressList)
-{
-    Console.WriteLine($"{++i}.{item}");
-}
+string[] file = File.ReadLines("config.txt").ToArray();
+IPAddress serverIP = IPAddress.Parse(file.First());
+int serverPort = int.Parse(file.Last());
 
-Console.Write("->_");
-int numberIP = int.Parse(Console.ReadLine());
 
-Console.WriteLine("Вкажіть порт:");
-
-int serverPort = int.Parse(Console.ReadLine()); // порт запуску додатка
-
-IPAddress serverIP = locahost.AddressList[numberIP-1];
-
-Console.Title = $"{serverIP}:{serverPort}";
+Console.WriteLine($"server started at {serverIP}:{serverPort}");
 
 //Згідно цих налаштувань працює наш сервер,
 //тобто по цій IP адресі і цьому порту можна буде 
