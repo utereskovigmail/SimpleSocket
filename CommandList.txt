@@ -18,3 +18,13 @@ dotnet --info
 dotnet build
 
 git pull
+
+dotnet build
+
+dotnet run
+
+Copy to folder /etc/systemd/system/
+
+systemctl enable qwerty 
+systemctl start qwerty
+systemctl status qwerty
