@@ -25,7 +25,11 @@ foreach (var item in locahost.AddressList)
 
 Console.Write("->_");
 int numberIP = int.Parse(Console.ReadLine());
-int serverPort = 1488; // порт запуску додатка
+
+Console.WriteLine("Вкажіть порт:");
+
+int serverPort = int.Parse(Console.ReadLine()); // порт запуску додатка
+
 IPAddress serverIP = locahost.AddressList[numberIP-1];
 
 Console.Title = $"{serverIP}:{serverPort}";
