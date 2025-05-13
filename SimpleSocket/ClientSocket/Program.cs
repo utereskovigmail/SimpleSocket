@@ -23,6 +23,7 @@ try
     sender.Send(data); //Відправляємо байти на сервер
     data = new byte[1024]; //Чистимо буфер
     int bytes = 0; //кількість байт
+    
     do
     {
         bytes = sender.Receive(data); //Отримали повідомлення від сервера

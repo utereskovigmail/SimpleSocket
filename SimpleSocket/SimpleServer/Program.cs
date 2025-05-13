@@ -9,33 +9,31 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using SimpleServer;
 
 Console.InputEncoding = Encoding.UTF8;
 Console.OutputEncoding = Encoding.UTF8;
-// var hostName = Dns.GetHostName();
-// Console.WriteLine($"Мій хост: {hostName}");
+var hostName = Dns.GetHostName();
+Console.WriteLine($"Мій хост: {hostName}");
 //Список усіх IP адрес доступних для даного ПК
-// var locahost = await Dns.GetHostEntryAsync(hostName);
-//
-// int i = 0;
-// foreach (var item in locahost.AddressList)
-// {
-//     Console.WriteLine($"{++i}.{item}");
-// }
-//
-// Console.Write("->_");
-// int numberIP = int.Parse(Console.ReadLine());
-//
-// Console.WriteLine("Вкажіть порт:");
-//
-// int serverPort = int.Parse(Console.ReadLine()); // порт запуску додатка
+var locahost = await Dns.GetHostEntryAsync(hostName);
 
-string[] file = File.ReadLines("config.txt").ToArray();
-IPAddress serverIP = IPAddress.Parse(file.First());
-int serverPort = int.Parse(file.Last());
+int i = 0;
+foreach (var item in locahost.AddressList)
+{
+    Console.WriteLine($"{++i}.{item}");
+}
 
+Console.Write("->_");
+int numberIP = int.Parse(Console.ReadLine());
 
-Console.WriteLine($"server started at {serverIP}:{serverPort}");
+Console.WriteLine("Вкажіть порт:");
+
+int serverPort = int.Parse(Console.ReadLine()); // порт запуску додатка
+
+IPAddress serverIP = locahost.AddressList[numberIP-1];
+
+Console.Title = $"{serverIP}:{serverPort}";
 
 //Згідно цих налаштувань працює наш сервер,
 //тобто по цій IP адресі і цьому порту можна буде 
@@ -50,6 +48,8 @@ var ipEndPoint = new IPEndPoint(serverIP, serverPort);
 //- це роблем не було.
 Socket server = new Socket(AddressFamily.InterNetwork, 
     SocketType.Stream, ProtocolType.Tcp);
+
+var cx = new AppDbContext();
 
 try
 {
@@ -67,6 +67,8 @@ try
         {
             bytes = await client.ReceiveAsync(buffer); //отримали байти від клієнта
             Console.WriteLine($"Повідомлення: {Encoding.Unicode.GetString(buffer)}");
+            cx.Messages.Add(new Message{content = Encoding.Unicode.GetString(buffer)});
+            cx.SaveChanges();
         } while (client.Available > 0); //Поки не прочитали усіх даних від клієнта
 
         string message = $"Дякую дружок. {DateTime.Now}";
